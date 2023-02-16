@@ -1,4 +1,4 @@
-#include "LedControl.h"
+#include <LedControl.h>
 #include "font.h"
 //din - 11
 //cs - 10
@@ -17,7 +17,7 @@ byte alarm = 0;
 
 //upcoming letters, TODO: code a font
 byte chr = 0;
-char text[20] = "Hello World!";
+char text[64] = "Hello World!";
 
 void setup() {
   // put your setup code here, to run once:
@@ -59,17 +59,21 @@ void loop() {
   //lc.setColumn(0,4,u[4]);
 
   if (alarm == 0) {
-    byte idx = AlphabetLUT[chr];
-    dispBuf[bufStart%40] = Alphabet[idx];
-    dispBuf[(bufStart+1)%40] = Alphabet[idx+1];
-    dispBuf[(bufStart+2)%40] = Alphabet[idx+2];
-    dispBuf[(bufStart+3)%40] = Alphabet[idx+3];
-    dispBuf[(bufStart+4)%40] = Alphabet[idx+4];
-    dispBuf[(bufStart+5)%40] = Alphabet[idx+5];
-    dispBuf[(bufStart+6)%40] = Alphabet[idx+6];
-    dispBuf[(bufStart+7)%40] = Alphabet[idx+7];
-    alarm = 8;
-    chr +=1;
+    if (chr > 64) {
+      //do nothing, we have reached the end of the text buffer
+    } else {
+      byte idx = AlphabetLUT[chr];
+      dispBuf[bufStart%40] = Alphabet[idx];
+      dispBuf[(bufStart+1)%40] = Alphabet[idx+1];
+      dispBuf[(bufStart+2)%40] = Alphabet[idx+2];
+      dispBuf[(bufStart+3)%40] = Alphabet[idx+3];
+      dispBuf[(bufStart+4)%40] = Alphabet[idx+4];
+      dispBuf[(bufStart+5)%40] = Alphabet[idx+5];
+      dispBuf[(bufStart+6)%40] = Alphabet[idx+6];
+      dispBuf[(bufStart+7)%40] = Alphabet[idx+7];
+      alarm = 8;
+      chr +=1;
+    };
   } else {
     alarm-=1;
   };
@@ -87,6 +91,11 @@ void loop() {
   };
   
   //put BT recieve code here
+  //it should be *really* easy since it is just optional serial reading
+  if (Serial.available()>0) {
+    Serial.readBytes(text,64);
+    chr=0;
+  };
 
   //move start of circular buffer to the right
   //and wrap back to 0 if it extends past the end of the buffer
