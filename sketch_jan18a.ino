@@ -32,7 +32,7 @@ void setup() {
 }
 
 void loop() {
-  //old code, copied directly from static example
+  //old code, copied directly from static example (displays ardu)
   //byte a[5]={B01111110,B10001000,B10001000,B10001000,B01111110};
   //byte r[5]={B00111110,B00010000,B00100000,B00100000,B00010000};
   //byte d[5]={B00011100,B00100010,B00100010,B00010010,B11111110};
@@ -59,6 +59,7 @@ void loop() {
   //lc.setColumn(0,4,u[4]);
 
   if (alarm == 0) {
+    Serial.println("Alarm Tripped");
     if (chr > 64) {
       //do nothing, we have reached the end of the text buffer
     } else {
@@ -73,6 +74,7 @@ void loop() {
       dispBuf[(bufStart+7)%40] = Alphabet[idx+7];
       alarm = 8;
       chr +=1;
+      Serial.println("Pushed Char");
     };
   } else {
     alarm-=1;
@@ -80,14 +82,13 @@ void loop() {
 
   // put your main code here, to run repeatedly:
   //re-render screens
-  Serial.print("bufStart ");
-  Serial.println(bufStart);
+  //Serial.print("bufStart ");
+  //Serial.println(bufStart);
   for (byte i = 8; 1<=40;i++) { //skip to the 8th collumn, AKA the left-most physical collumn
-    Serial.println(i);
     //put rendering code here
     //math.floor(i/8) the screen id
     //i%8 the collumn
-    lc.setColumn(floor(i/8), i%8,dispBuf[(bufStart + i)%40]);
+    lc.setColumn(floor(i/8), i%8, dispBuf[(bufStart + i)%40]);
   };
   
   //put BT recieve code here
