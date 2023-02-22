@@ -18,8 +18,10 @@ byte alarm = 0;
 //upcoming letters, TODO: code a font
 byte chr = 0;
 char text[64] = "Hello World!";
+char a = ' ' ;
 
 void setup() {
+  Serial.begin(9600);
   // put your setup code here, to run once:
   for (byte i=0; i<4; i++) {
     lc.shutdown(i,false);
@@ -63,18 +65,20 @@ void loop() {
     if (chr > 64) {
       //do nothing, we have reached the end of the text buffer
     } else {
-      byte idx = AlphabetLUT[chr];
+      byte idx = AlphabetLUT[text[chr]];
       dispBuf[bufStart%40] = Alphabet[idx];
-      dispBuf[(bufStart+1)%40] = Alphabet[idx+1];
-      dispBuf[(bufStart+2)%40] = Alphabet[idx+2];
-      dispBuf[(bufStart+3)%40] = Alphabet[idx+3];
-      dispBuf[(bufStart+4)%40] = Alphabet[idx+4];
-      dispBuf[(bufStart+5)%40] = Alphabet[idx+5];
-      dispBuf[(bufStart+6)%40] = Alphabet[idx+6];
-      dispBuf[(bufStart+7)%40] = Alphabet[idx+7];
+      dispBuf[(bufStart+1)%40] = Alphabet[(idx)*8+1];
+      dispBuf[(bufStart+2)%40] = Alphabet[(idx)*8+2];
+      dispBuf[(bufStart+3)%40] = Alphabet[(idx)*8+3];
+      dispBuf[(bufStart+4)%40] = Alphabet[(idx)*8+4];
+      dispBuf[(bufStart+5)%40] = Alphabet[(idx)*8+5];
+      dispBuf[(bufStart+6)%40] = Alphabet[(idx)*8+6];
+      dispBuf[(bufStart+7)%40] = Alphabet[(idx)*8+7];
       alarm = 8;
       chr +=1;
-      Serial.println("Pushed Char");
+      char tob[25];
+      sprintf(tob,"Pushed Char: %c \n idx: %X",text[chr],idx);
+      Serial.println(tob);
     };
   } else {
     alarm-=1;
@@ -84,10 +88,12 @@ void loop() {
   //re-render screens
   //Serial.print("bufStart ");
   //Serial.println(bufStart);
-  for (byte i = 8; 1<=40;i++) { //skip to the 8th collumn, AKA the left-most physical collumn
+  Serial.println("Writing collums");
+  for (byte i = 8; i<=40;i++) { //skip to the 8th collumn, AKA the left-most physical collumn
     //put rendering code here
     //math.floor(i/8) the screen id
     //i%8 the collumn
+    //Serial.println("rendering col: %d",i);
     lc.setColumn(floor(i/8), i%8, dispBuf[(bufStart + i)%40]);
   };
   
@@ -103,5 +109,5 @@ void loop() {
   bufStart = (bufStart + 1)%40;
   //reset leftmost collumn
   dispBuf[bufStart] = 0;
-  delay(1000);
+  delay(500);
 }

@@ -1,0 +1,11 @@
+#!/bin/bash
+DecNum=`printf "%d" $1`
+Binary=
+Number=$DecNum
+while [ $DecNum -ne 0 ]
+do
+    Bit=$(expr $DecNum % 2)
+    Binary=$Bit$Binary
+    DecNum=$(expr $DecNum / 2)
+done
+echo -e "$Number"
