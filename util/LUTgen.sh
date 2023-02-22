@@ -1,12 +1,12 @@
 #!/usr/bin/env fish
 echo -en "const byte AlphabetLUT[256]PROGMEM = {\n\t"
 
-rm chars log
+rm chars log 2>/dev/null
 
-for char in (cat font.h | grep ,| grep -o "//.*" | awk '{print $2 " " $3 " " $4}')
+for char in (cat font.h | grep ,| grep -o "//.*" | awk '{print $2 " " $4}')
     set byte (echo $char | awk '{print $1}')
     set idx (./util/h2b "0x$byte")
-    set new (echo $char | awk '{print $3}')
+    set new (echo $char | awk '{print $2}')
     echo -e "char$idx\t$new" >>chars
 end
 
