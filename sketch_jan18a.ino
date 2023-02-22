@@ -66,14 +66,14 @@ void loop() {
       //do nothing, we have reached the end of the text buffer
     } else {
       byte idx = AlphabetLUT[text[chr]];
-      dispBuf[bufStart%40] = Alphabet[idx];
-      dispBuf[(bufStart+1)%40] = Alphabet[(idx)*8+1];
-      dispBuf[(bufStart+2)%40] = Alphabet[(idx)*8+2];
-      dispBuf[(bufStart+3)%40] = Alphabet[(idx)*8+3];
-      dispBuf[(bufStart+4)%40] = Alphabet[(idx)*8+4];
-      dispBuf[(bufStart+5)%40] = Alphabet[(idx)*8+5];
-      dispBuf[(bufStart+6)%40] = Alphabet[(idx)*8+6];
-      dispBuf[(bufStart+7)%40] = Alphabet[(idx)*8+7];
+      dispBuf[bufStart%40] = Alphabet[idx*8];
+      dispBuf[(bufStart+1)%40] = Alphabet[(idx*8)+1];
+      dispBuf[(bufStart+2)%40] = Alphabet[(idx*8)+2];
+      dispBuf[(bufStart+3)%40] = Alphabet[(idx*8)+3];
+      dispBuf[(bufStart+4)%40] = Alphabet[(idx*8)+4];
+      dispBuf[(bufStart+5)%40] = Alphabet[(idx*8)+5];
+      dispBuf[(bufStart+6)%40] = Alphabet[(idx*8)+6];
+      dispBuf[(bufStart+7)%40] = Alphabet[(idx*8)+7];
       alarm = 8;
       chr +=1;
       char tob[25];

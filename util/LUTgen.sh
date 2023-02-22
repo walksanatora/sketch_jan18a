@@ -30,4 +30,4 @@ itr=0 while test $itr -lt '256'
     end
     set alarm (math "$alarm - 1")
 end
-echo -en "\n}"
+echo -en "\n};"
