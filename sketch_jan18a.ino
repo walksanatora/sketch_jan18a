@@ -8,9 +8,7 @@ LedControl lc=LedControl(11,13,10,4);
 
 //8 rows * 5 displays
 //(0-7 is a "virtual" display that is scrolled from)
-byte dispBuf[41] = {};
-//we use the above buffer as a circular buffer, this is the "start" of the buffer
-byte bufStart = 0;
+byte dispBuf[40] = {};
 
 //alarm that goes every 8 itterations (singal to write a new char onto the virtual screen)
 byte alarm = 0;
@@ -46,14 +44,14 @@ void loop() {
       //sprintf(tob,"bufst: %d..%d",bufStart,(bufStart+7)%40);
       //Serial.println(tob);
       byte idx = AlphabetLUT[text[chr]];
-      dispBuf[bufStart%40] = Alphabet[idx*8];
-      dispBuf[(bufStart+1)%40] = Alphabet[(idx*8)+1];
-      dispBuf[(bufStart+2)%40] = Alphabet[(idx*8)+2];
-      dispBuf[(bufStart+3)%40] = Alphabet[(idx*8)+3];
-      dispBuf[(bufStart+4)%40] = Alphabet[(idx*8)+4];
-      dispBuf[(bufStart+5)%40] = Alphabet[(idx*8)+5];
-      dispBuf[(bufStart+6)%40] = Alphabet[(idx*8)+6];
-      dispBuf[(bufStart+7)%40] = Alphabet[(idx*8)+7];
+      dispBuf[0] = Alphabet[idx*8];
+      dispBuf[1] = Alphabet[(idx*8)+1];
+      dispBuf[2] = Alphabet[(idx*8)+2];
+      dispBuf[3] = Alphabet[(idx*8)+3];
+      dispBuf[4] = Alphabet[(idx*8)+4];
+      dispBuf[5] = Alphabet[(idx*8)+5];
+      dispBuf[6] = Alphabet[(idx*8)+6];
+      dispBuf[7] = Alphabet[(idx*8)+7];
       // debug when pushing a new char to the disp buffer
       //sprintf(tob,"Pushed Char: %c (%x)\nidx: %d",text[chr],text[chr],idx);
       //Serial.println(tob);
@@ -103,11 +101,10 @@ void loop() {
     //    Serial.print(b);
     //    val = val << 1;
     //};Serial.println();
-    lc.setColumn(floor(i/8)-1, i%8, dispBuf[(bufStart + i)%40]);
+    lc.setColumn(floor(i/8)-1, i%8, dispBuf[i]);
   };
   
-  //put BT recieve code here
-  //it should be *really* easy since it is just optional serial reading
+  // simple serial reading
   if (Serial.available()>0) {
     for (byte i=0; i<4; i++) {
       /* clear the display */
@@ -125,16 +122,11 @@ void loop() {
     len = Serial.readBytes(text,64);
 
     chr=0;
+    alarm=0;
   };
 
-  //move start of circular buffer to the right
-  //and wrap back to 0 if it extends past the end of the buffer
-  if (bufStart <= 0 || bufStart > 40) {
-    bufStart = 40;
-  } else {
-    bufStart -= 1;
-  }
-  //reset leftmost collumn
-  dispBuf[bufStart%40] = 0;
+  byte tempBuf[40];
+  memcpy(tempBuf,dispBuf,39*sizeof(byte));
+  memcpy((dispBuf + sizeof(byte)),tempBuf,39*sizeof(byte));
   //delay(500);
 }
