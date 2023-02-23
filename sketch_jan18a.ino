@@ -17,8 +17,7 @@ byte alarm = 0;
 
 //upcoming letters, TODO: code a font
 byte chr = 0;
-char text[64] = "Hello World!";
-char a = ' ' ;
+char text[64] = "HELLO WORLD!";
 
 void setup() {
   Serial.begin(9600);
@@ -61,10 +60,13 @@ void loop() {
   //lc.setColumn(0,4,u[4]);
 
   if (alarm == 0) {
-    Serial.println("Alarm Tripped");
     if (chr > 64) {
       //do nothing, we have reached the end of the text buffer
     } else {
+      // some more debug for adding to disp buf
+      //char tob[40];
+      //sprintf(tob,"bufst: %d..%d",bufStart,(bufStart+7)%40);
+      //Serial.println(tob);
       byte idx = AlphabetLUT[text[chr]];
       dispBuf[bufStart%40] = Alphabet[idx*8];
       dispBuf[(bufStart+1)%40] = Alphabet[(idx*8)+1];
@@ -74,27 +76,56 @@ void loop() {
       dispBuf[(bufStart+5)%40] = Alphabet[(idx*8)+5];
       dispBuf[(bufStart+6)%40] = Alphabet[(idx*8)+6];
       dispBuf[(bufStart+7)%40] = Alphabet[(idx*8)+7];
+      // debug when pushing a new char to the disp buffer
+      //sprintf(tob,"Pushed Char: %c (%x)\nidx: %d",text[chr],text[chr],idx);
+      //Serial.println(tob);
+      //for (byte t = 0; t < 8; t++)
+      //{
+      //  Serial.print("Pushed line: ");
+      //  byte val = Alphabet[(idx*8)+t];
+      //  for (int j = 0; j < 8; j++)
+      //  {
+      //      bool b = val & 0x80;
+      //      Serial.print(b);
+      //      val = val << 1;
+      //  };Serial.println();
+      //}
       alarm = 8;
       chr +=1;
-      char tob[25];
-      sprintf(tob,"Pushed Char: %c \n idx: %X",text[chr],idx);
-      Serial.println(tob);
     };
   } else {
     alarm-=1;
   };
 
+  //debug dispBuf debug logger
+  //for (byte t = 0; t < 41; t++)
+  //{
+  //  Serial.print("buffer: ");
+  //  byte val = dispBuf[(bufStart+t)%40];
+  //  for (int j = 0; j < 8; j++)
+  //  {
+  //      bool b = val & 0x80;
+  //      Serial.print(b);
+  //      val = val << 1;
+  //  };Serial.println();
+  //}
+
   // put your main code here, to run repeatedly:
-  //re-render screens
-  //Serial.print("bufStart ");
-  //Serial.println(bufStart);
-  Serial.println("Writing collums");
+  //Serial.println("Render");
   for (byte i = 8; i<=40;i++) { //skip to the 8th collumn, AKA the left-most physical collumn
     //put rendering code here
     //math.floor(i/8) the screen id
     //i%8 the collumn
     //Serial.println("rendering col: %d",i);
-    lc.setColumn(floor(i/8), i%8, dispBuf[(bufStart + i)%40]);
+    //Serial.print("Render col: ");
+    //byte val = dispBuf[(bufStart + i)%40];
+    //for (int j = 0; j < 8; j++)
+    //{
+    //    bool b = val & 0x80;
+    //    Serial.print(b);
+    //    val = val << 1;
+    //};Serial.println();
+    lc.setColumn(floor(i/8)-1, i%8, dispBuf[(bufStart + i)%40]);
   };
   
   //put BT recieve code here
@@ -106,8 +137,12 @@ void loop() {
 
   //move start of circular buffer to the right
   //and wrap back to 0 if it extends past the end of the buffer
-  bufStart = (bufStart + 1)%40;
+  if (bufStart == 0) {
+    bufStart = 40;
+  } else {
+    bufStart -= 1;
+  }
   //reset leftmost collumn
-  dispBuf[bufStart] = 0;
-  delay(500);
+  dispBuf[(bufStart+39)%40] = 0;
+  //delay(500);
 }

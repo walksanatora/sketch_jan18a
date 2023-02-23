@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "author": "Walker Fowlkes",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-max7219-matrix",
+      "id": "matrix1",
+      "top": -117.14,
+      "left": -274.05,
+      "attrs": { "chain": "4" }
+    }
+  ],
+  "connections": [
+    [ "matrix1:V+", "uno:5V", "green", [ "h0" ] ],
+    [ "matrix1:GND", "uno:GND.3", "black", [ "h0" ] ],
+    [ "matrix1:DIN", "uno:11", "green", [ "h0" ] ],
+    [ "matrix1:CS", "uno:10", "green", [ "h0" ] ],
+    [ "matrix1:CLK", "uno:13", "green", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
