@@ -8,7 +8,7 @@ LedControl lc=LedControl(11,13,10,4);
 
 //8 rows * 5 displays
 //(0-7 is a "virtual" display that is scrolled from)
-byte dispBuf[40] = {};
+byte dispBuf[41] = {};
 //we use the above buffer as a circular buffer, this is the "start" of the buffer
 byte bufStart = 0;
 
@@ -129,7 +129,7 @@ void loop() {
 
   //move start of circular buffer to the right
   //and wrap back to 0 if it extends past the end of the buffer
-  if (bufStart == 0) {
+  if (bufStart <= 0 || bufStart > 40) {
     bufStart = 40;
   } else {
     bufStart -= 1;
