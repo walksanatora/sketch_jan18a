@@ -39,6 +39,7 @@ void loop() {
     if (chr > len) {
       //loop to the start
       chr = 0;
+      alarm = 0;
     } else {
       // some more debug for adding to disp buf
       //char tob[40];
@@ -134,6 +135,6 @@ void loop() {
     bufStart -= 1;
   }
   //reset leftmost collumn
-  dispBuf[(bufStart+39)%40] = 0;
+  dispBuf[bufStart%40] = 0;
   //delay(500);
 }
