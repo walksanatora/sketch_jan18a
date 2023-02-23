@@ -17,6 +17,7 @@ byte alarm = 0;
 
 //upcoming letters, TODO: code a font
 byte chr = 0;
+byte len = 13;
 char text[64] = "HELLO WORLD!";
 
 void setup() {
@@ -29,39 +30,15 @@ void setup() {
     /* and clear the display */
     lc.clearDisplay(i);
   }
-  
+  Serial.println("Booted!");
 }
 
 void loop() {
-  //old code, copied directly from static example (displays ardu)
-  //byte a[5]={B01111110,B10001000,B10001000,B10001000,B01111110};
-  //byte r[5]={B00111110,B00010000,B00100000,B00100000,B00010000};
-  //byte d[5]={B00011100,B00100010,B00100010,B00010010,B11111110};
-  //byte u[5]={B00111100,B00000010,B00000010,B00000100,B00111110};
-  //lc.setColumn(3,0,a[0]);
-  //lc.setColumn(3,1,a[1]);
-  //lc.setColumn(3,2,a[2]);
-  //lc.setColumn(3,3,a[3]);
-  //lc.setColumn(3,4,a[4]);
-  //lc.setColumn(2,0,r[0]);
-  //lc.setColumn(2,1,r[1]);
-  //lc.setColumn(2,2,r[2]);
-  //lc.setColumn(2,3,r[3]);
-  //lc.setColumn(2,4,r[4]);
-  //lc.setColumn(1,0,d[0]);
-  //lc.setColumn(1,1,d[1]);
-  //lc.setColumn(1,2,d[2]);
-  //lc.setColumn(1,3,d[3]);
-  //lc.setColumn(1,4,d[4]);
-  //lc.setColumn(0,0,u[0]);
-  //lc.setColumn(0,1,u[1]);
-  //lc.setColumn(0,2,u[2]);
-  //lc.setColumn(0,3,u[3]);
-  //lc.setColumn(0,4,u[4]);
 
   if (alarm == 0) {
-    if (chr > 64) {
-      //do nothing, we have reached the end of the text buffer
+    if (chr > len) {
+      //loop to the start
+      chr = 0;
     } else {
       // some more debug for adding to disp buf
       //char tob[40];
@@ -131,7 +108,21 @@ void loop() {
   //put BT recieve code here
   //it should be *really* easy since it is just optional serial reading
   if (Serial.available()>0) {
-    Serial.readBytes(text,64);
+    for (byte i=0; i<4; i++) {
+      /* clear the display */
+      lc.clearDisplay(i);
+    }
+    for (byte i=0; i<40; i++) {
+      /* clear the buffer */
+      dispBuf[i] = 0;
+    }
+    for (byte i=0; i<len; i++) {
+      /* clear the text */
+      text[i] = 0;
+    }
+    
+    len = Serial.readBytes(text,64);
+
     chr=0;
   };
 

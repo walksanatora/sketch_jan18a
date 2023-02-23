@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-echo -en "const byte AlphabetLUT[256]PROGMEM = {\n\t"
+echo -en "const static byte AlphabetLUT[256] = {\n\t"
 
 rm chars log 2>/dev/null
 
