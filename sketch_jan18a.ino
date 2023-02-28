@@ -44,14 +44,14 @@ void loop() {
       //sprintf(tob,"bufst: %d..%d",bufStart,(bufStart+7)%40);
       //Serial.println(tob);
       byte idx = AlphabetLUT[text[chr]];
-      dispBuf[0] = Alphabet[idx*8];
-      dispBuf[1] = Alphabet[(idx*8)+1];
-      dispBuf[2] = Alphabet[(idx*8)+2];
-      dispBuf[3] = Alphabet[(idx*8)+3];
-      dispBuf[4] = Alphabet[(idx*8)+4];
-      dispBuf[5] = Alphabet[(idx*8)+5];
-      dispBuf[6] = Alphabet[(idx*8)+6];
-      dispBuf[7] = Alphabet[(idx*8)+7];
+      dispBuf[0] = Alphabet[(idx*8)+7];
+      dispBuf[1] = Alphabet[(idx*8)+6];
+      dispBuf[2] = Alphabet[(idx*8)+5];
+      dispBuf[3] = Alphabet[(idx*8)+4];
+      dispBuf[4] = Alphabet[(idx*8)+3];
+      dispBuf[5] = Alphabet[(idx*8)+2];
+      dispBuf[6] = Alphabet[(idx*8)+1];
+      dispBuf[7] = Alphabet[(idx*8)];
       // debug when pushing a new char to the disp buffer
       //sprintf(tob,"Pushed Char: %c (%x)\nidx: %d",text[chr],text[chr],idx);
       //Serial.println(tob);
@@ -101,7 +101,7 @@ void loop() {
     //    Serial.print(b);
     //    val = val << 1;
     //};Serial.println();
-    lc.setColumn(floor(i/8)-1, i%8, dispBuf[i]);
+    lc.setColumn(4-floor(i/8), i%8, dispBuf[i]);
   };
   
   // simple serial reading

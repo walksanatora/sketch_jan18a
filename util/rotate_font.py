@@ -35,7 +35,7 @@ class symbol:
 
 syms: dict[int,symbol] = {}
 
-regex = re.compile("    0x..,.*")
+regex = re.compile("\t0x..,.*")
 
 def strToBin(s):
     return s == "1"
@@ -54,9 +54,10 @@ with open("font.h",'r') as f:
                 bits[:] = f'{int(parts[i][2:-1],16):0>8b}'
                 bits = list(map(strToBin,bits))
                 px.append(bits)
-            sym = symbol(px,parts[11],int(parts[10],16),int(parts[12]))
+            print(line,parts)
+            sym = symbol(px,parts[12],int(parts[11],16),int(parts[13]))
             sym.rotate_90_ccw()
-            syms[int(parts[10],16)] = sym
+            syms[int(parts[11],16)] = sym
 
 print(f"const static byte Alphabet[{len(syms)*8}] = {'{'}")
 for line in syms.values():
